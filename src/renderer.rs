@@ -382,6 +382,37 @@ impl Renderer {
         })
     }
 
+    /// Create new renderer object
+    ///
+    /// # Arguments
+    /// * `dom_root_id` - The HTMl Attribute ID of the parent element of to be created SVG
+    pub fn new_with_viewbox(dom_root_id: &str, x: i32, y: i32, width: i32, height: i32) -> Result<Renderer, RendererError> {
+        let document = crate::get_document()?;
+
+        let root = document
+            .get_element_by_id(dom_root_id)
+            .ok_or(Dom(UnfindableId(String::from(dom_root_id))))?;
+
+        let svg_element = SVGElem::new(Tag::Svg)
+            .set(
+                Attr::ViewBox,
+                format!(
+                    "{} {} {} {}",
+                    x, y, width, height,
+                ),
+            )
+            .append(SVGElem::new(Tag::Defs));
+
+        root.append_child(&crate::to_html(&svg_element))
+            .map_err(|_| Dom(UnappendableElement))?;
+
+        Ok(Renderer {
+            dom_root_id: String::from(dom_root_id),
+            figure_defs: BTreeSet::new(),
+            name_defs: HashMap::new(),
+        })
+    }
+
     /// Creates renderer object from svg element
     ///
     /// # Note
@@ -452,7 +483,7 @@ impl Renderer {
         }
 
         // Add use of definition
-        self.add_use(&figure_id[..], location)
+        self.add_use(&figure_id, location)
             .expect("Failed to add use!");
     }
 

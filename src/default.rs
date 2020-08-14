@@ -6,9 +6,9 @@ use svg_definitions::prelude::*;
 pub fn circle(radius: i32) -> SVGElem {
     SVGElem::new(Tag::Circle)
         .set(Attr::Radius, radius)
-        .set(Attr::Stroke, "#000000")
-        .set(Attr::StrokeWidth, 1)
-        .set(Attr::Fill, "transparent")
+        // .set(Attr::Stroke, "#000000")
+        // .set(Attr::StrokeWidth, 1)
+        // .set(Attr::Fill, "transparent")
         .set(Attr::Cx, 0)
         .set(Attr::Cy, 0)
 }
